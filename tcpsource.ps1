@@ -1,5 +1,5 @@
 #####################       IGNORED THIS!!!!   ########################
-$localver = "1.0"
+$localver = "3.0"
 $url = "https://api.github.com/repos/username/repo/releases/latest"
 $headers = @{ "Accept" = "application/vnd.github.v3+json" }
 $response = Invoke-RestMethod -Method Get -Uri $url -Headers $headers
