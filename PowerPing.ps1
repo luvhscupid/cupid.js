@@ -4,11 +4,7 @@ Write-Host "Welcome $env:USERNAME! - bing.com @ CupidJS" -ForegroundColor Red
 $fileUrl = "https://github.com/Killeroo/PowerPing/releases/download/v1.3.3/PowerPing.exe"
 $destination = Join-Path ([Environment]::GetFolderPath('ApplicationData')) 'cupidjs\src'
 
-if (Test-Path (Join-Path $destination 'PowerPing.exe')) {
-    Clear-Host
-    Write-Host "The file already exists! Stopping downloading."
-    Start-Sleep -Seconds 1
-    # Download file
+if (!(Test-Path (Join-Path $destination 'PowerPing.exe'))) {
     Clear-Host
     Write-Host "Downloading..."
     Invoke-WebRequest -Uri $fileUrl -OutFile (Join-Path $destination 'PowerPing.exe')
