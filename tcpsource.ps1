@@ -9,8 +9,8 @@ function Gradient($startColor, $endColor, $string) {
 }
 
 $welcomeMessage = "Welcome $env:USERNAME! - bing.com @ cupid#0002"
-$gradientStartColor = "Blue"
-$gradientEndColor = "Green"
+$gradientStartColor = "Red"
+$gradientEndColor = "Blue"
 
 Gradient $gradientStartColor $gradientEndColor $welcomeMessage
 
@@ -64,6 +64,6 @@ while ($true) {
 
 ## Run script ##
 Clear-Host
-Gradient $gradientStartColor $gradientEndColor $welcomeMessage
+Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
 & $scriptPath |
 Out-Null
