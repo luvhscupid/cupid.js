@@ -63,8 +63,8 @@ Write-Host "Done!"
 ## Menu ##
 while ($true) {
     Gradient $gradientColors $welcomeMessage
-    Write-Host "Paping.ps1"
-    Write-Host "PowerPing.ps1"
+    Write-Host "Paping"
+    Write-Host "PowerPing"
     Write-Host "Quit"
     $choice = Read-Host "Enter your choice"
 
