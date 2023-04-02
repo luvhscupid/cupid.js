@@ -40,6 +40,6 @@ while ($true) {
 Clear-Host
 Push-Location $destination
 Write-Host "Welcome $env:USERNAME! - bing.com @ CupidJS" -ForegroundColor Red
-& "$destination\PowerPing.exe" --cg $IP
+& ".\PowerPing.exe" --cg $IP
 
 Pop-Location
