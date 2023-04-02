@@ -1,41 +1,3 @@
-$currentVer = $null
-$response = $false
-$localVer = 4.0
-
-$appData = [Environment]::GetFolderPath('ApplicationData')
-
-$cupidjsPath = Join-Path $appData 'cupidjs'
-
-if (-not (Test-Path $cupidjsPath)) {
-    New-Item -ItemType Directory -Path $cupidjsPath | Out-Null
-}
-
-if (-not $MyInvocation.MyCommand.Path) {
-    $scriptPath = Join-Path $cupidjsPath 'tcpsource.ps1'
-} else {
-    $scriptPath = $MyInvocation.MyCommand.Path
-}
-
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/luvhscupid/cupid.js/main/checkversion' -UseBasicParsing | ForEach-Object {
-    $currentVer = $_.Content.Trim()
-    $response = $true
-}
-
-if ($localVer -ne $currentVer) {
-    Write-Host "New CupidJS version is available, updating the script..."
-
-    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/luvhscupid/cupid.js/main/tcpsource.ps1' -UseBasicParsing | ForEach-Object {
-        $code = $_.Content
-        Set-Content -Path $scriptPath -Value $code
-    }
-
-    Write-Host "Successfully updated CupidJS. Restarting Script... :)"
-    Start-Sleep -Seconds 2
-    & $scriptPath
-
-    Write-Host "CupidJS has been updated!"
-    & $scriptPath
-    
 ## variables ##
 $zipPath = Join-Path $env:USERPROFILE "paping_1.5.5_x86_windows.zip"
 $fileUrl = "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/paping/paping_1.5.5_x86_windows.zip"
@@ -104,8 +66,3 @@ Push-Location $destination
 Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
 & "$destination\tcp.exe" $IP -p $PORT | Select-String "^Connected" | ForEach-Object { $_ -replace "time=", "ping=" } | ForEach-Object { Write-Host $_ -ForegroundColor Green }
 Pop-Location
-
-
-} else {
-    Write-Host "CupidJS is already up to date."
-}
