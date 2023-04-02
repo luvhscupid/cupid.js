@@ -1,5 +1,5 @@
 $localver = "3.0"
-$url = "https://github.com/luvhscupid/cupid.js/releases/tag/cupidjs"
+$url = "https://raw.githubusercontent.com/luvhscupid/cupid.js/main/tcpsource.ps1"
 $response = Invoke-WebRequest -Uri $url
 $latestver = ($response.Content -match "Version:\s*(\d+\.\d+)")[1]
 
