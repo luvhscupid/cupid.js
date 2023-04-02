@@ -1,7 +1,6 @@
 $currentVer = $null
 $response = $false
-$localVer = 3.0
-$CupidJS = 
+$localVer = 1.0
 
 $appData = [Environment]::GetFolderPath('ApplicationData')
 
