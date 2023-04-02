@@ -1,68 +1,69 @@
 ## variables ##
-$zipPath = Join-Path $env:USERPROFILE "paping_1.5.5_x86_windows.zip"
-$fileUrl = "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/paping/paping_1.5.5_x86_windows.zip"
-$destination = $env:USERPROFILE 
-$extractedFilePath = Join-Path $destination "paping.exe"
-$newFileName = "tcp.exe"
+function Gradient($startColor, $endColor, $string) {
+    $step = ($endColor - $startColor) / ($string.Length - 1)
+    for ($i = 0; $i -lt $string.Length; $i++) {
+        $color = $startColor + ($step * $i)
+        Write-Host $string[$i] -NoNewline -ForegroundColor $color
+    }
+    Write-Host ""
+}
 
-Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
-Write-Host "Checking files..."
-Start-Sleep -Seconds 1
-if (Test-Path (Join-Path $destination $newFileName)) {
-    Clear-Host
-    Write-Host "The files already exists! , stopping downloading."
+$welcomeMessage = "Welcome $env:USERNAME! - bing.com @ cupid#0002"
+$gradientStartColor = "Blue"
+$gradientEndColor = "Green"
+
+Gradient $gradientStartColor $gradientEndColor $welcomeMessage
+
+$appData = [Environment]::GetFolderPath('ApplicationData')
+$destination = Join-Path $appData 'cupidjs'
+$chatgpt1Path = Join-Path $destination 'Paping.ps1'
+$chatgpt2Path = Join-Path $destination 'PowerPing.ps1'
+
+if (!(Test-Path $destination)) {
+    New-Item -ItemType Directory -Path $destination | Out-Null
+}
+
+if (Test-Path $chatgpt1Path -and Test-Path $chatgpt2Path) {
+    Write-Host "The files already exist! Skipping downloading."
     Start-Sleep -Seconds 2
 } else {
-    Clear-Host
+    # Download files
     Write-Host "Downloading..."
-    Invoke-WebRequest -Uri $fileUrl -OutFile $zipPath
-    Expand-Archive -Path $zipPath -DestinationPath $destination
-    Rename-Item -Path $extractedFilePath -NewName $newFileName
-    Remove-Item -Path $zipPath
-    Remove-Item -Path $extractedFilePath
+    $chatgpt1Url = "Paping.ps1"
+    $chatgpt2Url = "PowerPing.ps1"
+    Invoke-WebRequest -Uri $chatgpt1Url -OutFile $chatgpt1Path
+    Invoke-WebRequest -Uri $chatgpt2Url -OutFile $chatgpt2Path
 }
 
-## Expected Jobs ##
+Write-Host "Done!"
+
+
+## Menu ##
 while ($true) {
     Clear-Host
-    Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
-    Write-Host "IP OR WEBSITE: " -NoNewline -ForegroundColor Green
-    $IP = Read-Host
-    if ([string]::IsNullOrEmpty($IP)) {
-        Clear-Host
-        Write-Host "You must enter something!" -ForegroundColor Red
-        Start-Sleep -Seconds 2
-    } elseif (!(Test-Connection -ComputerName $IP -Count 3 -Quiet)) {
-        Clear-Host
-        Write-Host "Invalid IP or Website!" -ForegroundColor Red
-        Start-Sleep -Seconds 2
-    } else {
+    Gradient $gradientStartColor $gradientEndColor $welcomeMessage
+    Write-Host "Paping.ps1"
+    Write-Host "PowerPing.ps1"
+    Write-Host "Quit"
+    $choice = Read-Host "Enter your choice"
+
+    if ($choice -eq "1" -or $choice -eq "") {
+        $scriptPath = $chatgpt1Path
         break
+    } elseif ($choice -eq "2") {
+        $scriptPath = $chatgpt2Path
+        break
+    } elseif ($choice -eq "Q") {
+        exit
+    } else {
+        Clear-Host
+        Write-Host "Invalid choice! Please try again." -ForegroundColor Red
+        Start-Sleep -Seconds 2
     }
 }
 
-while ($true) {
-    Clear-Host
-    Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
-    Write-Host "IP OR WEBSITE: $IP" -ForegroundColor Green
-    Write-Host "PORTS: " -NoNewline -ForegroundColor Green
-    $PORT = Read-Host
-    if ([string]::IsNullOrEmpty($PORT)) {
-        Clear-Host
-        $PORT = 443
-        break
-    } elseif ($PORT -notmatch '^\d+$' -or [int]$PORT -lt 1 -or [int]$PORT -gt 65535) {
-        Clear-Host
-        Write-Host "Invalid Port number!" -ForegroundColor Red
-        Start-Sleep -Seconds 2
-    } else {
-        break
-    }
-}
-
-## the actual Jobs ##
+## Run script ##
 Clear-Host
-Push-Location $destination
 Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
-& "$destination\tcp.exe" $IP -p $PORT | Select-String "^Connected" | ForEach-Object { $_ -replace "time=", "ping=" } | ForEach-Object { Write-Host $_ -ForegroundColor Green }
-Pop-Location
+& $scriptPath |
+Out-Null
