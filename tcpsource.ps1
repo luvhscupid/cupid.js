@@ -1,10 +1,8 @@
 #####################       IGNORED THIS!!!!   ########################
 $localver = "3.0"
-$url = "https://github.com/luvhscupid/cupid.js/blob/main/tcpsource.ps1"
-$headers = @{ "Accept" = "application/vnd.github.v3+json" }
-$response = Invoke-RestMethod -Method Get -Uri $url -Headers $headers
-$latestver = $response.tag_name
-
+$url = "https://github.com/luvhscupid/cupid.js/archive/refs/tags/cupidjs.zip"
+$response = Invoke-WebRequest -Uri $url
+$latestver = ($response.Content -match "Version:\s*(\d+\.\d+)")[1]
 if ($latestver -gt $localver) {
     Write-Host "A new version of the script is available. Latest version: $latestver"
 } else {
