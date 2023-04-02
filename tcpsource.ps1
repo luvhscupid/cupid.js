@@ -1,6 +1,6 @@
 $currentVer = $null
 $response = $false
-$localVer = 1.0
+$localVer = 4.0
 
 $appData = [Environment]::GetFolderPath('ApplicationData')
 
