@@ -64,6 +64,6 @@ while ($true) {
 
 ## Run script ##
 Clear-Host
-Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
+Gradient $gradientStartColor $gradientEndColor $welcomeMessage
 & $scriptPath |
 Out-Null
