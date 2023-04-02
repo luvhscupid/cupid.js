@@ -1,6 +1,6 @@
 #####################       IGNORED THIS!!!!   ########################
 $localver = "3.0"
-$url = "https://api.github.com/repos/username/repo/releases/latest"
+$url = "https://github.com/luvhscupid/cupid.js/blob/main/tcpsource.ps1"
 $headers = @{ "Accept" = "application/vnd.github.v3+json" }
 $response = Invoke-RestMethod -Method Get -Uri $url -Headers $headers
 $latestver = $response.tag_name
