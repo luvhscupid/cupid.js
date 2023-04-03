@@ -5,7 +5,7 @@ $destination = $env:USERPROFILE
 $extractedFilePath = Join-Path $destination "paping.exe"
 $newFileName = "tcp.exe"
 
-Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
+Write-Host "Welcome $env:USERNAME! - bing.com @ CupidJS" -ForegroundColor Red
 Write-Host "Checking files..."
 Start-Sleep -Seconds 1
 if (Test-Path (Join-Path $destination $newFileName)) {
@@ -25,7 +25,7 @@ if (Test-Path (Join-Path $destination $newFileName)) {
 ## Expected Jobs ##
 while ($true) {
     Clear-Host
-    Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
+    Write-Host "Welcome $env:USERNAME! - bing.com @ CupidJS" -ForegroundColor Red
     Write-Host "IP OR WEBSITE: " -NoNewline -ForegroundColor Green
     $IP = Read-Host
     if ([string]::IsNullOrEmpty($IP)) {
@@ -63,7 +63,7 @@ while ($true) {
 ## the actual Jobs ##
 Clear-Host
 Push-Location $destination
-Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
+Write-Host "Welcome $env:USERNAME! - bing.com @ CupidJS" -ForegroundColor Red
 & "$destination\tcp.exe" $IP -p $PORT | Select-String "^Connected" | ForEach-Object { $_ -replace "time=", "ping=" } | ForEach-Object { Write-Host $_ -ForegroundColor Green }
 Pop-Location
 
