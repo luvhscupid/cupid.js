@@ -1,8 +1,4 @@
-$welcomeMessage = "Welcome $env:USERNAME! - bing.com @ cupid#0002"
-
 ## variables ##
-Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
-
 $appData = [Environment]::GetFolderPath('ApplicationData')
 $destination = Join-Path $appData 'cupidjs'
 $PapingPath = Join-Path $destination 'Paping.ps1'
