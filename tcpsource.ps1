@@ -25,7 +25,7 @@ if ((Test-Path $PapingPath) -and (Test-Path $PowerPingPath)) {
 }
 
 Write-Host "Done!"
-
+Clear-Host
 
 ## Menu ##
 while ($true) {
