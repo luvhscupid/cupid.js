@@ -1,5 +1,4 @@
 $welcomeMessage = "Welcome $env:USERNAME! - bing.com @ cupid#0002"
-$lastColor = [System.Drawing.Color]::FromArgb(255, 255, 255)
 
 ## variables ##
 Write-Host "Welcome $env:USERNAME! - bing.com @ cupid#0002" -ForegroundColor Red
