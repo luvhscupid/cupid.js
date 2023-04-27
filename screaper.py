@@ -33,7 +33,8 @@ for url in urls:
         proxy_list = text.split('\n')
         for proxy in proxy_list:
             if proxy.strip() != '':
-                proxies.append(proxy.strip())
+                proxy_address = proxy.strip().split()[0]
+                proxies.append(proxy_address)
 
 # Write proxies to file
 with open('/var/cache/motd/bigboy/proxies.txt', 'w') as f:
