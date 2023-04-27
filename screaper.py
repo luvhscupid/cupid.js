@@ -1,3 +1,4 @@
+import re
 import requests
 from bs4 import BeautifulSoup
 
@@ -30,11 +31,10 @@ for url in urls:
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
         text = soup.get_text()
-        proxy_list = text.split('\n')
-        for proxy in proxy_list:
-            if proxy.strip() != '':
-                proxy_address = proxy.strip().split()[0]
-                proxies.append(proxy_address)
+        proxy_list = re.split('[ :/]', text)
+        for i in range(len(proxy_list)):
+            if re.match(r'^\d{1,3}(\.\d{1,3}){3}$', proxy_list[i]):
+                proxies.append(proxy_list[i])
 
 # Write proxies to file
 with open('/var/cache/motd/bigboy/proxies.txt', 'w') as f:
