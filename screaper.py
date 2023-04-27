@@ -1,6 +1,7 @@
-import re
 import requests
 from bs4 import BeautifulSoup
+import re
+import concurrent.futures
 
 urls = [
     'https://ciapak-proxy.cf/api/paid/?key=980321830129381029&type=http',
@@ -24,19 +25,39 @@ urls = [
     'https://www.proxy-list.download/api/v1/get?type=http&anon=transparent'
 ]
 
-proxies = []
+def extract_ip_address(text):
+    """
+    Extracts valid IPv4 addresses from text using regex pattern
+    """
+    pattern = r'\b(?:\d{1,3}\.){3}\d{1,3}\b'
+    return re.findall(pattern, text)
 
-for url in urls:
+def get_proxies(url):
+    """
+    Gets proxies from a given URL
+    """
+    proxies = []
     response = requests.get(url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
         text = soup.get_text()
-        proxy_list = re.split('[ :/]', text)
-        for i in range(len(proxy_list)):
-            if re.match(r'^\d{1,3}(\.\d{1,3}){3}$', proxy_list[i]):
-                proxies.append(proxy_list[i])
+        ip_addresses = extract_ip_address(text)
+        proxies.extend(ip_addresses)
+    return proxies
+
+# Create a ThreadPoolExecutor for concurrent processing
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    futures = []
+    for url in urls:
+        futures.append(executor.submit(get_proxies, url))
+    
+    # Aggregate the results from each future
+    all_proxies = []
+    for future in concurrent.futures.as_completed(futures):
+        proxies = future.result()
+        all_proxies.extend(proxies)
 
 # Write proxies to file
 with open('/var/cache/motd/bigboy/proxies.txt', 'w') as f:
-    for proxy in proxies:
+    for proxy in all_proxies:
         f.write(proxy + '\n')
