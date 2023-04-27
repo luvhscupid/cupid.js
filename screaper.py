@@ -36,6 +36,6 @@ for url in urls:
                 proxies.append(proxy.strip())
 
 # Write proxies to file
-with open('proxies.txt', 'w') as f:
+with open('/var/cache/motd/bigboy/proxies.txt', 'w') as f:
     for proxy in proxies:
         f.write(proxy + '\n')
