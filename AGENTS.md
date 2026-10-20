@@ -1,5 +1,13 @@
 # Hybrid Codex workflow
 
+## Git synchronization and safety
+
+- Before editing repository files, inspect the current branch, `git status`, and configured remotes; fetch `origin/main` and compare it with local `HEAD`.
+- If local `HEAD` is behind and the update is a fast-forward, synchronize before editing. Preserve all uncommitted and untracked work; never reset, overwrite, or discard it automatically. If safe preservation is unclear, stop and explain.
+- If local and remote branches have diverged, stop and explain their commits and status before choosing a reconciliation strategy.
+- Before pushing, fetch again and confirm the push is a normal fast-forward. If the remote advanced unexpectedly, stop and explain before reconciling.
+- Never force-push or rewrite remote history without explicit approval.
+
 ## Start each task
 
 - Use the active selected repository as the project context. Follow its root `AGENTS.md` and relevant nested instructions. If no project is selected, use `cupid.js` as the default Cloud planning workspace.
