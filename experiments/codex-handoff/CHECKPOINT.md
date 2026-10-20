@@ -4,7 +4,7 @@
 
 ## Relevant Git commit
 
-Current base commit: `bf303d06f08ae9c09de8d65f205fc0d278293fd0` (`Clarify calculator handoff checkpoint`, published as `origin/work`). Specification commit: `8fa4b49` (`Add calculator Codex handoff spec`). Implementation and test changes are uncommitted and have not been pushed.
+Implementation and test commit: `8eee27079a0b5804de6fdf63ec6ca6ac8147c7e0` (`Add verified calculator handoff implementation`), based on `bf303d06f08ae9c09de8d65f205fc0d278293fd0` (`Clarify calculator handoff checkpoint`, published as `origin/work`). Specification commit: `8fa4b49` (`Add calculator Codex handoff spec`).
 
 ## Task objective
 
@@ -29,6 +29,7 @@ Verify that Cloud Codex can define a small task, Local Codex can independently i
 
 - Cloud planning phase: interface, behavior, acceptance criteria, and Local verification requirements are defined.
 - Added `calculator.py` with the four specified arithmetic functions and `test_calculator.py` with five `unittest` cases.
+- Committed the implementation and tests in the detached handoff worktree.
 - Ran the portable test suite in the available Linux Cloud runtime; this is not Windows Local verification.
 
 ## Verification requirements
@@ -39,9 +40,9 @@ This evidence verifies behavior in Cloud/Linux only. The experiment's Windows Lo
 
 ## Unresolved blockers
 
-- Windows Local execution of the test suite is pending. The current implementation and tests are uncommitted in the Cloud checkout, so they are not yet available through `origin/work`.
+- Windows Local execution of the test suite is pending.
 - Cloud review through GitHub is pending the Local handoff.
 
 ## Exact next authorized Local action
 
-Once these uncommitted changes are made available to the Windows Local checkout, run `python -m unittest -v` from `experiments/codex-handoff`, record the Windows version, Python version, test count, and result here, and report the result for Cloud review. Keep changes within `experiments/codex-handoff/`; do not modify `portfolio/battlefield-editing/`.
+In the Windows Local checkout, safely fetch and fast-forward to the published `origin/work`, then run `python -m unittest -v` from `experiments/codex-handoff`. Record the Windows version, Python version, test count, and result here, then hand off to Cloud Codex for GitHub review. Keep changes within `experiments/codex-handoff/`; do not modify `portfolio/battlefield-editing/`.
