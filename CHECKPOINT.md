@@ -1,44 +1,45 @@
-# Hybrid Codex workflow upgrade
+# Indonesia shopping research skill
 
 **Verification state:** `CLOUD_VERIFIED`
 
 ## Relevant Git commit
 
-Base commit: `1a839b7a2979daf9df30cd6e0b47d056b508a39b` (`origin/main` before this change).
+Task commit: current `HEAD` (the single shopping-skill commit, rebased onto `origin/main`). Parent: `efb6c40fbea7a595f155a5f21fa4515cf00be5e2`.
 
 ## Task objective
 
-Configure native Codex instructions and skill selection for a project-aware hybrid Cloud/Local workflow, with Git-tracked checkpoints as the authoritative handoff.
+Implement a reusable, implicitly discoverable native Codex skill named `indonesia-shopping-research` for read-only, evidence-backed PC hardware price comparison across Shopee Indonesia, Tokopedia, Blibli, and Lazada.
 
 ## Approved decisions
 
-- Use the active selected repository and its instructions; use `cupid.js` as the default Cloud planning workspace only when no project is selected.
-- Cloud may implement and test self-contained work. Reserve `LOCAL_PENDING` for local files, hardware, operating-system integration, or local-only verification.
-- Superpowers is primary. ADHD is an optional replacement for one ideation phase, never an additional phase. Drill-Me is only for user-requested learning or understanding checks.
-- Codebase Memory MCP is opportunistic and supplementary; Git-tracked plans and checkpoints are authoritative.
-- Preserve approved decisions and avoid repeated brainstorming absent material new evidence.
-- Never claim local verification from Cloud evidence. Keep authorization boundaries and Local PC configuration unchanged.
+- Prioritize lowest reliable purchase cost, after excluding incompatible offers.
+- Use public web and read-only browser research by default. Do not install scraping dependencies, require authenticated marketplace sessions, or bypass access controls.
+- Record marketplace coverage as checked, blocked, unavailable, or not checked.
+- Separate verified listing prices from estimated checkout totals and stale search-index observations.
+- Report direct product links, timestamps, seller signals, warranty, stock, shipping/discount information, and ranking reasons.
+- Do not purchase, change account settings, or handle login credentials.
+- Keep changes limited to the skill and this checkpoint; do not push before user review.
 
 ## Completed work
 
-- Updated `AGENTS.md` with project-aware discovery, Cloud/Local/Unknown classification, workflow ownership, skill-selection rules, checkpoint evidence, and authorization limits.
-- Updated the Cloud startup and installer draft to persist those rules and enable contextual skill discovery for the installed Cloud skills.
-- Updated the current Cloud skill metadata for debugging, test-driven development, verification, optional ADHD ideation, and Drill-Me. No Local PC files or settings were changed.
+- Added `.agents/skills/indonesia-shopping-research/SKILL.md` with discovery description, workflow, compatibility gate, evidence labels, coverage statuses, suspicious-listing guidance, and standard report tables.
+- Added `.agents/skills/indonesia-shopping-research/agents/openai.yaml` with UI metadata and `allow_implicit_invocation: true`.
+- Dry-run researched DDR4-3200 2x16 GB desktop RAM. No reliable winner could be selected. Shopee's direct product page showed Rp5,039,000 but the retrieved content was crawled last month and marked sold out. Lazada's search/tag page showed Rp1,850,000 for a Kingston Fury Beast 32GB kit, with 5/5 from 31 ratings and 87 sold, but its direct product page returned no readable details; seller was “Lapak Pendaki Outdoor,” warranty, stock, shipping, and model verification were unavailable, and the title included unrelated wording. This remains an unverified search-index lead, not a recommendation. Blibli product detail requests returned 403; an indexed Crucial 32GB DDR4-3200 UDIMM listing had no usable price. Targeted Tokopedia searches returned no usable attributable product listing. Research timestamp: 2026-10-20 06:01 UTC.
 
 ## Test and supporting evidence
 
-- `codex debug prompt-input` passed for generic feature, debugging, and learning prompts from the selected repository. Each prompt included this repository's `AGENTS.md` and all eight skills in the activation set.
-- Read each installed `agents/openai.yaml`; `using-superpowers`, `brainstorming`, `writing-plans`, `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `adhd`, and `drill-me` all have `allow_implicit_invocation: true`. The contextual rules in `AGENTS.md` decide when ADHD and Drill-Me are appropriate.
-- `bash -n` and Python `compile()` passed for the saved Cloud install script and its embedded skill-installer block.
-- `codex mcp list` reports the supplementary `codebase-memory` stdio server as enabled; its authentication status is unsupported in this runtime, so Git remains the fallback.
-- No application tests apply to this instruction/configuration-only change.
-- Cloud environment draft saved successfully with `requires_publish: true`; fresh-task persistence of the new Cloud startup and installer is pending publication.
+- `python /run/codex-environment/codex-home/skills/.system/skill-creator/scripts/quick_validate.py .agents/skills/indonesia-shopping-research` — passed (`Skill is valid!`).
+- `codex debug prompt-input "Compare DDR4-3200 2x16 GB RAM prices in Indonesia"` — passed discovery check; the new skill appears under available skills with its scoped description.
+- Parsed `agents/openai.yaml` with PyYAML and asserted implicit invocation, default prompt, display name, coverage labels, price labels, compatibility gate, warranty, and direct-link requirements — passed.
+- Public source evidence: Shopee direct listing `https://shopee.co.id/Corsair-DDR4-Vengeance-LPX-32GB-(2X16GB)-3200-MHz-CMK32GX4M2C3200C18-i.107411941.26302014138`; Lazada tag result `https://www.lazada.co.id/tag/memori-ram-32-gb-ddr4/` and linked product `https://www.lazada.co.id/products/pdp-i5884704188.html`; Blibli direct listing request failed with 403; Tokopedia targeted searches surfaced no usable listing.
+- Codex prompt-input lists available skills on both relevant and unrelated prompts, so that diagnostic verifies catalog discoverability but does not prove selective activation behavior.
+- No application tests apply; no scraping dependencies were installed or executed.
 
 ## Unresolved blockers
 
-- Fresh-task restoration of the updated Cloud environment has not yet been verified.
-- Local Codex configuration is intentionally untouched and cannot be verified from this Cloud environment.
+- Product compatibility cannot be finalized without the buyer's motherboard/device constraints. No destination was provided, so shipping and delivered totals could not be established.
+- No current, in-stock offer had enough verifiable price, seller, warranty, and shipping evidence to rank.
 
 ## Exact next action
 
-Review and publish the saved Cloud environment draft in Environment settings so fresh Cloud tasks receive the updated startup and installer instructions.
+Recheck that `origin/main` is still `efb6c40fbea7a595f155a5f21fa4515cf00be5e2`, then push `main` with a normal fast-forward push.

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Indonesia Shopping Research"
+  short_description: "Compare PC hardware prices across Indonesian marketplaces"
+  default_prompt: "Use $indonesia-shopping-research to compare compatible PC hardware offers across Shopee Indonesia, Tokopedia, Blibli, and Lazada using read-only public sources."
+policy:
+  allow_implicit_invocation: true
