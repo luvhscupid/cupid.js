@@ -1,6 +1,6 @@
 # Cloud ↔ Local Codex Calculator Handoff
 
-**Verification state:** `LOCAL_PENDING`
+**Verification state:** `LOCAL_VERIFIED`
 
 ## Relevant Git commit
 
@@ -31,18 +31,32 @@ Verify that Cloud Codex can define a small task, Local Codex can independently i
 - Added `calculator.py` with the four specified arithmetic functions and `test_calculator.py` with five `unittest` cases.
 - Committed the implementation and tests in the detached handoff worktree.
 - Ran the portable test suite in the available Linux Cloud runtime; this is not Windows Local verification.
+- Verified the committed implementation and tests from `origin/work` on Windows Local. The existing detached worktree contains different untracked copies of both Python files; those were preserved and not used for this verification.
 
 ## Verification requirements
 
-Cloud runtime evidence: `uname -a` reported `Linux 4cc9d1afdbfa 6.18.55 #1 SMP Wed Oct 14 19:45:18 UTC 2026 x86_64 GNU/Linux`; `python --version` reported `Python 3.12.14`. From `experiments/codex-handoff`, `PYTHONDONTWRITEBYTECODE=1 python -m unittest -v` ran 5 tests and passed (add, subtract, multiply, divide, and division by zero). `git diff --check` passed. The implementation uses only the Python standard library.
+Cloud runtime evidence: `uname -a` reported `Linux 4cc9d1afdbfa 6.18.55 #1 SMP Wed Oct 14 19:45:18 UTC 2026 x86_64 GNU/Linux`; `python --version` reported `Python 3.12.14`. From `experiments/codex-handoff`, `PYTHONDONTWRITEBYTECODE=1 python -m unittest -v` ran 5 tests and passed (add, subtract, multiply, divide, and division by zero). `git diff --check` passed.
 
-This evidence verifies behavior in Cloud/Linux only. The experiment's Windows Local verification and Cloud review through GitHub remain incomplete.
+Windows Local evidence: `[System.Runtime.InteropServices.RuntimeInformation]::OSDescription` reported `Microsoft Windows 10.0.26300`; `[System.Environment]::OSVersion.VersionString` reported `Microsoft Windows NT 10.0.26300.0`; the Python executable `C:\Users\cupid\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe --version` reported `Python 3.12.14`. The committed `experiments/codex-handoff/` files were extracted from `origin/work` commit `7a45bfd32eff329ccc695e9875482a785ec4cad3` into a temporary directory; from that extracted directory the exact command `& 'C:\Users\cupid\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m unittest -v` produced:
+
+```text
+test_add (test_calculator.CalculatorTests.test_add) ... ok
+test_divide (test_calculator.CalculatorTests.test_divide) ... ok
+test_divide_by_zero_raises (test_calculator.CalculatorTests.test_divide_by_zero_raises) ... ok
+test_multiply (test_calculator.CalculatorTests.test_multiply) ... ok
+test_subtract (test_calculator.CalculatorTests.test_subtract) ... ok
+
+Ran 5 tests in 0.000s
+OK
+Exit code: 0
+```
+
+The verified test files and calculator source were the versions committed on `origin/work`; no changes were made to `calculator.py` or `test_calculator.py` for this correction.
 
 ## Unresolved blockers
 
-- Windows Local execution of the test suite is pending.
-- Cloud review through GitHub is pending the Local handoff.
+- Cloud review through GitHub of the corrected Windows evidence is pending.
 
 ## Exact next authorized Local action
 
-In the Windows Local checkout, safely fetch and fast-forward to the published `origin/work`, then run `python -m unittest -v` from `experiments/codex-handoff`. Record the Windows version, Python version, test count, and result here, then hand off to Cloud Codex for GitHub review. Keep changes within `experiments/codex-handoff/`; do not modify `portfolio/battlefield-editing/`.
+Cloud Codex should review the corrected checkpoint evidence on `origin/work`. No further Local implementation is authorized by this checkpoint.
