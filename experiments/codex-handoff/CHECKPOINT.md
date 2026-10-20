@@ -4,7 +4,7 @@
 
 ## Relevant Git commit
 
-Cloud phase commit: the commit containing this `SPEC.md` and `CHECKPOINT.md`. Synchronized parent/base: `90a5af0f8c32e597751924404e0c3f0ad9f51cbb` (`origin/main` before this phase).
+Specification commit: `8fa4b49` (`Add calculator Codex handoff spec`). Synchronized parent/base: `90a5af0f8c32e597751924404e0c3f0ad9f51cbb` (`origin/main` before the specification was added).
 
 ## Task objective
 
@@ -16,6 +16,14 @@ Verify that Cloud Codex can define a small task, Local Codex can independently i
 - Use Python 3 and the standard library only.
 - Local Codex owns implementation and test execution; Cloud Codex owns this spec and later GitHub review.
 - Keep this integration test limited to this directory.
+
+## Acceptance criteria
+
+- `calculator.py` provides `add`, `subtract`, `multiply`, and `divide` with the behavior in `SPEC.md`.
+- `test_calculator.py` uses `unittest` and covers the four operations plus division by zero.
+- The tests pass using Python 3 and its standard library only.
+- Local Codex records the exact verification command and result here.
+- No files outside `experiments/codex-handoff/` are changed for implementation or verification.
 
 ## Current phase and completed work
 
