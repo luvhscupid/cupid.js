@@ -1,10 +1,10 @@
 # Cloud ↔ Local Codex Calculator Handoff
 
-**Verification state:** `PLANNED`
+**Verification state:** `LOCAL_PENDING`
 
 ## Relevant Git commit
 
-Specification commit: `8fa4b49` (`Add calculator Codex handoff spec`). Synchronized parent/base: `90a5af0f8c32e597751924404e0c3f0ad9f51cbb` (`origin/main` before the specification was added).
+Current base commit: `bf303d06f08ae9c09de8d65f205fc0d278293fd0` (`Clarify calculator handoff checkpoint`, published as `origin/work`). Specification commit: `8fa4b49` (`Add calculator Codex handoff spec`). Implementation and test changes are uncommitted and have not been pushed.
 
 ## Task objective
 
@@ -28,18 +28,20 @@ Verify that Cloud Codex can define a small task, Local Codex can independently i
 ## Current phase and completed work
 
 - Cloud planning phase: interface, behavior, acceptance criteria, and Local verification requirements are defined.
-- Calculator implementation and tests have not been created; no calculator tests have been run.
-- No implementation result is claimed.
+- Added `calculator.py` with the four specified arithmetic functions and `test_calculator.py` with five `unittest` cases.
+- Ran the portable test suite in the available Linux Cloud runtime; this is not Windows Local verification.
 
 ## Verification requirements
 
-Local Codex must implement `calculator.py` and `test_calculator.py` in this directory, then run `python -m unittest -v` from `experiments/codex-handoff` (or an equivalent Python 3 launcher command on Windows). Record the exact command, Python version, test count, and pass/fail result here. The test suite must cover all four operations and division by zero. Cloud has not verified the implementation.
+Cloud runtime evidence: `uname -a` reported `Linux 4cc9d1afdbfa 6.18.55 #1 SMP Wed Oct 14 19:45:18 UTC 2026 x86_64 GNU/Linux`; `python --version` reported `Python 3.12.14`. From `experiments/codex-handoff`, `PYTHONDONTWRITEBYTECODE=1 python -m unittest -v` ran 5 tests and passed (add, subtract, multiply, divide, and division by zero). `git diff --check` passed. The implementation uses only the Python standard library.
+
+This evidence verifies behavior in Cloud/Linux only. The experiment's Windows Local verification and Cloud review through GitHub remain incomplete.
 
 ## Unresolved blockers
 
-- Local implementation and test execution are pending.
+- Windows Local execution of the test suite is pending. The current implementation and tests are uncommitted in the Cloud checkout, so they are not yet available through `origin/work`.
 - Cloud review through GitHub is pending the Local handoff.
 
 ## Exact next authorized Local action
 
-Safely synchronize with `origin/main` under the root `AGENTS.md` rules, preserving existing worktree changes. Then, using only Python 3 standard-library features, implement `calculator.py` and `test_calculator.py` exactly as specified in `SPEC.md`, run the required unittest command, and record the implementation files, exact verification command, Python version, test count, and result in this checkpoint. Keep changes within `experiments/codex-handoff/`; do not modify `portfolio/battlefield-editing/`. After verification, commit and push through a normal fast-forward so Cloud Codex can review the implementation and test evidence through GitHub.
+Once these uncommitted changes are made available to the Windows Local checkout, run `python -m unittest -v` from `experiments/codex-handoff`, record the Windows version, Python version, test count, and result here, and report the result for Cloud review. Keep changes within `experiments/codex-handoff/`; do not modify `portfolio/battlefield-editing/`.
