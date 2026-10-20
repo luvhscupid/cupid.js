@@ -6,7 +6,7 @@
 
 ## Relevant Git commit
 
-Implementation commit: `8f93bd110936bdd728e3a77b4b9de116650f82f1` (`Add automatic handoff checkpoint watcher`).
+Implementation commits: `8f93bd110936bdd728e3a77b4b9de116650f82f1` (`Add automatic handoff checkpoint watcher`) and `6ba03fe9c581a8357e4474e517028ec6aa6a045a` (`Sanitize checkpoint report output`).
 
 ## Task objective
 
@@ -30,7 +30,7 @@ Build a minimal Windows-compatible, dependency-free watcher that reports new, ex
 ## Test and supporting evidence
 
 - Environment: `uname -a` reported Linux x86_64; `python3 --version` reported Python 3.12.14. This is Cloud verification, not Windows verification.
-- From `automatic_handoff`, `python3 -m unittest -v` ran 6 tests and passed: new-task report, restart/duplicate suppression, malformed checkpoint, reporting failure, transient fetch failure, and non-fast-forward branch change.
+- From `automatic_handoff`, `python3 -m unittest -v` ran 6 tests and passed: new-task report with terminal-control sanitization, restart/duplicate suppression, malformed checkpoint, reporting failure, transient fetch failure, and non-fast-forward branch change.
 - From `automatic_handoff`, `python3 -m py_compile watcher.py test_watcher.py` passed.
 - `git diff --check` passed before commit.
 - No dependencies were installed. No working-tree checkout or user files were modified by the watcher tests; all test repositories were temporary.
