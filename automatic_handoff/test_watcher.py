@@ -12,7 +12,7 @@ CHECKPOINT = """# Task checkpoint
 **Automatic Handoff:** `ENABLED`
 **Task ID:** `sample-42`
 **Verification state:** `PLANNED`
-**Exact next authorized action:** Review the task plan.
+**Exact next authorized action:** Review \x1b[31mthe task plan\x1b[0m.
 """
 
 
@@ -54,13 +54,13 @@ class WatcherIntegrationTests(unittest.TestCase):
         self.assertEqual(len(tasks), 1)
         self.assertEqual(tasks[0]["task_id"], "sample-42")
         self.assertEqual(tasks[0]["status"], "PLANNED")
-        self.assertEqual(tasks[0]["next_action"], "Review the task plan.")
+        self.assertEqual(tasks[0]["next_action"], "Review [31mthe task plan[0m.")
         self.assertEqual(tasks[0]["commit"], run("git", "-C", str(self.source), "rev-parse", "HEAD"))
         self.assertEqual(json.loads(self.state.read_text())["commit"], tasks[0]["commit"])
 
     def test_new_commit_reports_once_and_restart_suppresses_duplicate(self) -> None:
         poll(self.clone, self.state)
-        self.write_checkpoint(CHECKPOINT.replace("Review the task plan.", "Review implementation evidence."))
+        self.write_checkpoint(CHECKPOINT.replace("the task plan", "implementation evidence"))
         commit = self.commit_and_push("update checkpoint")
         tasks = poll(self.clone, self.state)
         self.assertEqual([item["commit"] for item in tasks], [commit])
@@ -94,7 +94,7 @@ class WatcherIntegrationTests(unittest.TestCase):
         poll(self.clone, self.state)
         before = self.state.read_bytes()
         initial = run("git", "-C", str(self.source), "rev-parse", "HEAD")
-        self.write_checkpoint(CHECKPOINT.replace("Review the task plan.", "Second commit."))
+        self.write_checkpoint(CHECKPOINT.replace("the task plan", "second commit"))
         self.commit_and_push("second commit")
         poll(self.clone, self.state)
         before = self.state.read_bytes()

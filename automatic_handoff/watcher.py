@@ -106,7 +106,7 @@ def _checkpoint(repo: Path, commit: str, checkpoint_path: str) -> str | None:
         raise WatchError(f"checkpoint at {commit} is not valid UTF-8") from exc
     if parsed is None:
         return None
-    safe_action = "".join(char for char in parsed["next_action"] if ord(char) >= 32 and ord(char) != 127).strip()
+    safe_action = "".join(char for char in parsed["next_action"] if char.isprintable()).strip()
     if not safe_action:
         raise WatchError(f"checkpoint at {commit} has no printable next authorized action")
     parsed["next_action"] = safe_action
