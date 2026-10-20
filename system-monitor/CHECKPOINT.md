@@ -4,7 +4,7 @@
 
 ## Relevant Git commit
 
-Implementation commit: pending.
+Implementation commit: `5e939ddb523cf7fdd404d582d67c10d4bb7db07c` (`Add Windows system monitor prototype`).
 
 ## Task objective
 
