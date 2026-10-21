@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "skill_roots": ["skills"],
+  "max_skill_bytes": 262144,
+  "task_classes": [
+    "implementation",
+    "debugging",
+    "review",
+    "planning",
+    "unrelated"
+  ],
+  "skills": {
+    "implementation": {
+      "path": "skills/implementation/SKILL.md",
+      "required": true,
+      "task_classes": ["implementation"]
+    },
+    "debugging": {
+      "path": "skills/debugging/SKILL.md",
+      "required": true,
+      "task_classes": ["debugging"]
+    },
+    "review": {
+      "path": "skills/review/SKILL.md",
+      "required": true,
+      "task_classes": ["review"]
+    },
+    "planning": {
+      "path": "skills/planning/SKILL.md",
+      "required": true,
+      "task_classes": ["planning"]
+    }
+  },
+  "routes": {
+    "implementation": ["implementation"],
+    "debugging": ["debugging"],
+    "review": ["review"],
+    "planning": ["planning"],
+    "unrelated": []
+  }
+}

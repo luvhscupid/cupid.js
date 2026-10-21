@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/native-codex-skill-gate/capability-registry.schema.json",
+  "title": "Native Codex capability registry",
+  "description": "Observed, environment-scoped inventory and verification evidence for existing Codex capabilities.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "environment", "inventory", "capabilities"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surface", "os", "scope"],
+      "properties": {
+        "surface": { "type": "string", "minLength": 1 },
+        "version": { "type": ["string", "null"] },
+        "os": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string", "minLength": 1 },
+        "account_context": { "type": ["string", "null"] }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timestamp", "inspected_sources"],
+      "properties": {
+        "timestamp": { "type": "string", "format": "date-time" },
+        "inspected_sources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/capability" }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reference", "observed_at"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["catalog", "manifest", "path", "native_event", "tool_result", "test_observation", "error", "other"]
+        },
+        "reference": { "type": "string", "minLength": 1 },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "summary": { "type": "string" }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "actual_name", "integration_type", "native_invocation", "installation", "restrictions", "status", "evidence", "verification"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" },
+        "actual_name": { "type": ["string", "null"] },
+        "integration_type": { "enum": ["skill", "plugin", "MCP", "other", "unknown", null] },
+        "native_invocation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mechanism", "entry_point", "implicit_supported", "details"],
+          "properties": {
+            "mechanism": { "enum": ["native_skill_activation", "plugin_activation", "mcp_tool_call", "native_tool_call", "other", "unknown", null] },
+            "entry_point": { "type": ["string", "null"] },
+            "implicit_supported": { "type": ["boolean", "null"] },
+            "details": { "type": "string" }
+          }
+        },
+        "installation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["location", "package_id", "server_id", "tool_id", "discovery_scope"],
+          "properties": {
+            "location": { "type": ["string", "null"] },
+            "package_id": { "type": ["string", "null"] },
+            "server_id": { "type": ["string", "null"] },
+            "tool_id": { "type": ["string", "null"] },
+            "discovery_scope": { "type": "string", "minLength": 1 }
+          }
+        },
+        "restrictions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["DISCOVERED", "AVAILABLE", "INVOKED", "VERIFIED", "UNAVAILABLE", "BLOCKED"]
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "verification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["invocation_observed", "expected_effect_observed", "expected_effect", "test_case"],
+          "properties": {
+            "invocation_observed": { "type": "boolean" },
+            "expected_effect_observed": { "type": "boolean" },
+            "expected_effect": { "type": ["string", "null"] },
+            "test_case": { "type": ["string", "null"] }
+          }
+        },
+        "notes": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "VERIFIED" } }, "required": ["status"] },
+          "then": { "properties": { "verification": { "properties": { "invocation_observed": { "const": true }, "expected_effect_observed": { "const": true } } } } }
+        },
+        {
+          "if": { "properties": { "status": { "const": "INVOKED" } }, "required": ["status"] },
+          "then": { "properties": { "verification": { "properties": { "invocation_observed": { "const": true } } } } }
+        }
+      ]
+    }
+  }
+}
