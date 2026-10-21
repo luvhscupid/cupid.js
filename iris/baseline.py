@@ -1,8 +1,9 @@
-"""Run the Iris plain-prompt vision baseline against labeled image cases.
+"""Optional external-model comparison adapter for the Iris evaluation harness.
 
 Uses only Python's standard library plus Pillow (already required to generate
 the Iris fixtures). It targets an explicitly configured OpenAI-compatible chat
-completions endpoint; it never guesses a provider or model.
+completions endpoint; it never guesses a provider or model. This adapter is not
+part of Iris's Codex-powered runtime and is not required to use Iris.
 """
 
 from __future__ import annotations
@@ -135,6 +136,8 @@ def run(cases_path: Path, scoreboard_path: Path, output_path: Path | None = None
     config_present = bool(base_url and model)
     result: dict[str, Any] = {
         "schema_version": 1,
+        "adapter_role": "optional_experimental_external_comparison",
+        "iris_runtime_component": False,
         "status": "ready" if config_present else "blocked",
         "provider_endpoint_host": urlparse(base_url).netloc if base_url else None,
         "requested_model": model or None,
@@ -152,8 +155,9 @@ def run(cases_path: Path, scoreboard_path: Path, output_path: Path | None = None
     }
     if not config_present:
         result["blocker"] = (
-            "No vision endpoint/model configured. Set IRIS_VISION_BASE_URL and IRIS_VISION_MODEL "
-            "for an OpenAI-compatible endpoint; IRIS_VISION_API_KEY is optional for local endpoints."
+            "Optional external comparison not configured. Iris itself does not require an external "
+            "endpoint or model. For a deliberately run experiment, set IRIS_VISION_BASE_URL and "
+            "IRIS_VISION_MODEL; IRIS_VISION_API_KEY is optional for local endpoints."
         )
     else:
         predictions = {}

@@ -1,11 +1,14 @@
 import base64
+import contextlib
+import io
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from baseline import image_report, request_prediction
+from baseline import image_report, request_prediction, run as run_baseline
 from harness import DEFAULT_CASES, evaluate, load_cases, load_scoreboard_cases
 from scoreboard import generate
 
@@ -39,6 +42,21 @@ class ScoreboardIntegrationTests(unittest.TestCase):
 
 
 class BaselineTests(unittest.TestCase):
+    def test_unconfigured_external_adapter_is_not_an_iris_runtime_blocker(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            generate(output)
+            with patch.dict(os.environ, {
+                "IRIS_VISION_BASE_URL": "",
+                "IRIS_VISION_MODEL": "",
+                "IRIS_VISION_API_KEY": "",
+            }), contextlib.redirect_stdout(io.StringIO()):
+                result = run_baseline(DEFAULT_CASES, output / "ground_truth.json")
+        self.assertEqual("blocked", result["status"])
+        self.assertEqual("optional_experimental_external_comparison", result["adapter_role"])
+        self.assertFalse(result["iris_runtime_component"])
+        self.assertIsNone(result["evaluation"])
+
     def test_uncertain_cat_identification_is_labeled_explicitly(self):
         cat = next(case for case in load_cases() if case["id"] == "cat-portrait-01")
         self.assertEqual("uncertain", cat["expected"]["breed_identification"])
