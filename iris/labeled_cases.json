@@ -21,9 +21,9 @@
       "id": "cat-portrait-01",
       "domain": "cats",
       "image": "fixtures/cats.png",
-      "prompt": "What can you tell me about this cat?",
-      "expected": {"animal": "cat", "fur_color": "orange"},
-      "avoid": ["definitely a specific breed", "certainly a specific breed"]
+      "prompt": "Can you identify this cat's breed?",
+      "expected": {"animal": "cat", "fur_color": "orange", "breed_identification": "uncertain"},
+      "avoid": ["Maine Coon", "Persian", "Siamese", "specific breed"]
     },
     {
       "id": "meal-plate-01",

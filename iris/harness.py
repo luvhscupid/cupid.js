@@ -38,6 +38,41 @@ def load_cases(path: Path = DEFAULT_CASES) -> list[dict[str, Any]]:
     return data["cases"]
 
 
+def load_scoreboard_cases(manifest_path: Path) -> list[dict[str, Any]]:
+    """Adapt generated scoreboard ground truth into normal labeled cases."""
+    data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if data.get("schema_version") != 1 or not isinstance(data.get("cases"), list):
+        raise ValueError("scoreboard manifest must have schema_version 1 and a cases array")
+    cases = []
+    seen: set[str] = set()
+    for item in data["cases"]:
+        case_id = item.get("id")
+        image = item.get("image")
+        expected = item.get("ground_truth")
+        if not case_id or not image or not isinstance(expected, dict):
+            raise ValueError("scoreboard entries require id, image, and ground_truth")
+        if case_id in seen:
+            raise ValueError(f"duplicate scoreboard case id: {case_id}")
+        seen.add(case_id)
+        image_path = (manifest_path.parent / image).resolve()
+        if not image_path.is_relative_to(manifest_path.parent.resolve()):
+            raise ValueError(f"scoreboard case {case_id} image path escapes manifest directory")
+        if not image_path.is_file():
+            raise ValueError(f"scoreboard case {case_id} image does not exist: {image}")
+        cases.append({
+            "id": case_id,
+            "domain": "gaming",
+            "image": image,
+            "image_root": str(manifest_path.parent.resolve()),
+            "prompt": "Who won, and what was the final score?",
+            "context": "I missed the game and want to know who won.",
+            "expected": expected,
+            "avoid": ["invented team", "stadium location", "innings"],
+            "variation": item.get("variation"),
+        })
+    return cases
+
+
 def evaluate(cases: list[dict[str, Any]], predictions: dict[str, dict[str, Any]]) -> dict[str, Any]:
     """Exact-match expected fields and count explicit avoid-term occurrences.
 
@@ -48,21 +83,40 @@ def evaluate(cases: list[dict[str, Any]], predictions: dict[str, dict[str, Any]]
     for case in cases:
         prediction = predictions.get(case["id"], {})
         matched = {key: prediction.get(key) == value for key, value in case["expected"].items()}
+        unresolved = [key for key in case["expected"] if prediction.get(key) is None]
         text = json.dumps(prediction, ensure_ascii=False).casefold()
         violations = [term for term in case["avoid"] if term.casefold() in text]
-        rows.append({"id": case["id"], "matched": matched, "avoid_violations": violations})
+        answered = [key for key in case["expected"] if prediction.get(key) is not None]
+        rows.append({"id": case["id"], "matched": matched, "answered_fields": answered,
+                     "unresolved_fields": unresolved, "avoid_violations": violations})
     total = sum(len(row["matched"]) for row in rows)
     correct = sum(sum(row["matched"].values()) for row in rows)
-    return {"case_count": len(rows), "field_count": total, "correct_fields": correct,
-            "field_accuracy": correct / total if total else None, "cases": rows}
+    answered = sum(len(row["answered_fields"]) for row in rows)
+    violations = sum(bool(row["avoid_violations"]) for row in rows)
+    return {
+        "case_count": len(rows),
+        "field_count": total,
+        "answered_fields": answered,
+        "unresolved_fields": total - answered,
+        "correct_fields": correct,
+        "field_accuracy": correct / answered if answered else None,
+        "coverage": answered / total if total else None,
+        "cases_with_unsupported_claims": violations,
+        "unsupported_claim_rate": violations / len(rows) if rows else None,
+        "cases": rows,
+    }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cases", type=Path, default=DEFAULT_CASES)
+    parser.add_argument("--scoreboards", type=Path, help="scoreboard output directory or ground_truth.json")
     parser.add_argument("--predictions", type=Path, help="JSON object mapping case IDs to predictions")
     args = parser.parse_args()
     cases = load_cases(args.cases)
+    if args.scoreboards:
+        manifest = args.scoreboards / "ground_truth.json" if args.scoreboards.is_dir() else args.scoreboards
+        cases.extend(load_scoreboard_cases(manifest))
     if args.predictions:
         result = evaluate(cases, json.loads(args.predictions.read_text(encoding="utf-8")))
         print(json.dumps(result, indent=2))

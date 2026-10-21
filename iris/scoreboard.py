@@ -43,7 +43,13 @@ def generate(out_dir: Path) -> list[dict]:
         ("BLUE HARBOR", "IRON PEAK", 28, 7),
     ], start=1):
         base = render_scoreboard(home, away, hscore, ascore)
-        base_gt = {"away_team": away, "away_score": ascore, "home_team": home, "home_score": hscore}
+        base_gt = {
+            "away_team": away,
+            "away_score": ascore,
+            "home_team": home,
+            "home_score": hscore,
+            "winner": home if hscore > ascore else away,
+        }
         entries.append(_write_case(out_dir, f"game-{idx}-clean", base, base_gt, "clean"))
 
         blurry = base.filter(ImageFilter.GaussianBlur(radius=2.2))
