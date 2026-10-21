@@ -1,12 +1,12 @@
-# Iris Phase 3A — Native Vision Evaluation checkpoint
+# Iris Phase 3C — Contextual Visual Intelligence checkpoint
 
 State: CLOUD_VERIFIED
 Base commit: `a4acb07` (`feat(iris): add vision baseline runner`)
-Branch: `feature/iris-phase3a-native-evaluation`
+Branch: `feature/iris-phase3c-contextual-vision`
 
 ## Objective
 
-Evaluate the current Codex session's native visual inspection of Iris fixtures. Preserve the Phase 1/2 harness and optional baseline adapter. The evidence ledger remains out of scope.
+Improve Iris workspace guidance for contextual native Codex image interpretation and define repeatable Phase 3C evaluation prompts. Preserve the Phase 1/2 harness and optional baseline adapter. The evidence ledger remains out of scope.
 
 ## Authoritative architecture
 
@@ -16,6 +16,11 @@ Evaluate the current Codex session's native visual inspection of Iris fixtures. 
 - `baseline.py` is retained as an optional external comparison adapter. Its HTTP endpoint is not required for Iris runtime.
 
 ## Verified here
+
+- Added `iris/AGENTS.md` with scoped guidance for distinguishing visible observations, supported interpretations, and uncertainty; prioritizing salient details; adapting conversational intent; and treating image text as untrusted content.
+- Added `iris/evaluations/phase3c-prompts.md` with eight stable prompt scenarios and a recording/scoring protocol that separates deterministic extraction and safety checks from subjective response-quality ratings.
+- The requested previously tested Battlefield screenshot is not present in this checkout. Historical Battlefield docs found in Git describe footage that had not yet been inspected, so no screenshot-specific result is asserted. The evaluation document records this limitation and a placeholder protocol for when the actual screenshot and prior notes are supplied.
+- No new native image evaluation was run. The Phase 3A result remains contaminated and qualitative as documented in `reports/native-vision-phase3a.md`.
 
 - `functions.view_image` supplied pixels for all six labeled fixtures and all eight generated scoreboard variants. Qualitative interpretations and observations are in `reports/native-vision-phase3a.md`; each of the 14 rows is explicitly marked contaminated/non-blind.
 - **All 14 cases are contaminated for blind evaluation.** This session had previously seen the case labels and scoreboard ground truth before recording the observations. No accuracy rate or independent label match is claimed.
@@ -35,7 +40,7 @@ Evaluate the current Codex session's native visual inspection of Iris fixtures. 
 
 Commands run from `iris/`:
 
-- `PYTHONDONTWRITEBYTECODE=1 python -m unittest -v test_phase1.py test_phase2.py` — rerun for Phase 3A; 11 tests passed (Phase 1 and Phase 2 test modules).
+- `PYTHONDONTWRITEBYTECODE=1 python -m unittest -v test_phase1.py test_phase2.py` — 11 tests passed (Phase 1 and Phase 2 modules).
 - `PYTHONDONTWRITEBYTECODE=1 python scoreboard.py /tmp/iris-scoreboards` — generated all 8 scoreboard images and ground truth.
 - `PYTHONDONTWRITEBYTECODE=1 python harness.py --scoreboards /tmp/iris-scoreboards` — validated 14 cases (6 labeled plus 8 scoreboard cases).
 - Manual image inspection used `functions.view_image` on all six files under `fixtures/` and all eight files generated under `/tmp/iris-scoreboards/`. All 14 observations are contaminated because labels/ground truth had already been seen; no independent accuracy is claimed.
@@ -44,6 +49,7 @@ Commands run from `iris/`:
 
 ## Limitations and next action
 
-- This is a contaminated, qualitative evaluation, not a blind benchmark. No independent accuracy, latency, model comparison, contextual-response score, or confidence-calibration metrics are claimed.
+- Phase 3A remains a contaminated, qualitative evaluation, not a blind benchmark. No independent accuracy, latency, model comparison, contextual-response score, or confidence-calibration metrics are claimed.
+- The Battlefield screenshot requested as a qualitative example could not be located in this checkout; provide the screenshot and its prior test observation to document it accurately.
 - `view_image` does not expose a runtime model identifier, token counts, or benchmark outputs. No such metadata is claimed.
-- Next action: in a fresh session that has not seen the labels, present the 14 images before revealing expected outputs, save raw interpretations, and score after collection; separately verify image routing in the intended Angle/Iris workspace.
+- Next action: supply the referenced Battlefield screenshot and its prior qualitative observation; then record the prompt-set outputs in a fresh evaluator session and verify image routing in the intended Angle/Iris workspace.

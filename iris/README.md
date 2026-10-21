@@ -1,5 +1,7 @@
 # Iris
 
+Workspace behavior guidance for native Codex image interpretation is in [`AGENTS.md`](AGENTS.md). Phase 3C's reproducible contextual prompt set and separate deterministic/subjective review protocol are in [`evaluations/phase3c-prompts.md`](evaluations/phase3c-prompts.md).
+
 ## Architecture
 
 - Codex is the underlying AI and execution environment.
